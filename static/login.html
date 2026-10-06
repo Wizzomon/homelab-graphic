@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homelab Orchestrator - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body, html { width: 100%; height: 100%; margin: 0; padding: 0; background: #020617; color: #f8fafc; font-family: sans-serif; }</style>
+</head>
+<body class="flex items-center justify-center">
+    <div class="bg-slate-900 border border-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
+running        <h1 class="text-xl font-bold mb-1">Homelab Orchestrator</h1>
+        <p class="text-xs text-slate-400 mb-6">Enter your credentials to access the management panel.</p>
+        
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Username</label>
+                <input type="text" id="username" required
+                    class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+                <input type="password" id="password" required
+                    class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+            </div>
+            <p id="login-error" class="text-xs text-red-400 hidden"></p>
+            <button type="submit" 
+                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium py-2 rounded transition shadow">
+                Sign In
+            </button>
+        </form>
+    </div>
+
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errBox = document.getElementById('login-error');
+            
+            try {
+                let res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                let data = await res.json();
+                
+                if (data.success) {
+                    localStorage.setItem("homelab_auth", "true");
+		    window.location.href = '/dashboard';
+                } else {
+                    errBox.innerText = data.detail || "Authentication failed";
+                    errBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                errBox.innerText = "Network error connecting to backend.";
+                errBox.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
