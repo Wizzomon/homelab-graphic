@@ -5,7 +5,7 @@ import json
 import uuid
 
 # Change this to your Orchestrator's IP/port if running on a separate machine
-ORCHESTRATOR_URL = "http://127.0.0.1:8000/api/agents/register"
+ORCHESTRATOR_URL = "http://192.168.86.210:8000/api/agents/register"
 
 def get_local_ip():
     """Finds the active local network IP address."""
