@@ -11,6 +11,14 @@ from pydantic import BaseModel
 from datetime import datetime
 app = FastAPI(title="Homelab Orchestrator")
 
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASs
+else:
+    base_path = os.path.dirname(__file__)
+
+folder_path = os.path.join(base_path, "static")
+
+app.mount("/static", StaticFiles(directory=folder_path), name="static")
 
 DB_FILE = "homelab.db"
 
